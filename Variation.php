@@ -15,14 +15,18 @@ class Variation
      * Sort rows based on title key asc and seller_id key desc.
      *
      * @param array $rows
+     * @param array $orders
      *
      * @return array
      */
-    private function sort(array $rows):array
+    private function sort(array $rows, array $orders = []):array
     {
+        if(count($orders) !== 2) {
+            $orders = [['key' => 'title', 'dir' => 'asc'], ['key' => 'seller_id', 'dir' => 'desc']];
+        }
         array_multisort(
-            array_column($rows, 'title'), SORT_ASC,
-            array_column($rows, 'seller_id'), SORT_DESC,
+            array_column($rows, $orders[0]['key']), strtolower($orders[0]['dir']) == 'asc' ? SORT_ASC : SORT_DESC,
+            array_column($rows, $orders[1]['key']), strtolower($orders[1]['dir']) == 'asc' ? SORT_ASC : SORT_DESC,
             $rows
         );
         return $rows;
