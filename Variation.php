@@ -5,10 +5,16 @@ class Variation
 {
     private $data = [];
 
-    public function summarize($data)
+    /**
+     * Summarize data and sort it.
+     *
+     * @param       $data
+     * @param array $orders
+     */
+    public function summarize($data, array $orders = [])
     {
         $data = $this->group($data);
-        $this->data = $this->sort($data);
+        $this->data = $this->dynamicMultiSort($data, $orders);
     }
 
     /**
@@ -30,6 +36,30 @@ class Variation
             $rows
         );
         return $rows;
+    }
+
+    /**
+     * Sort data based on array_multisort.
+     *
+     * @param array $data
+     * @param array $orders
+     *
+     * @return array|mixed
+     *
+     * @example dynamicMultiSort($data, ['title' => 'asc', 'seller_id' => 'desc'])
+     */
+    private function dynamicMultiSort(array $data, array $orders = [])
+    {
+        foreach ($orders as $order => $direction) {
+            $params[] = array_column($data, $order);
+            $params[] = strtolower($direction) == 'asc' ? SORT_ASC : SORT_DESC;
+        }
+        if(!isset($params)) {
+            return $this->sort($data);
+        }
+        $params[] = &$data;
+        call_user_func_array('array_multisort', $params);
+        return $data;
     }
 
     /**
