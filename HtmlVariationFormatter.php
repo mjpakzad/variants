@@ -18,6 +18,7 @@ class HtmlVariationFormatter implements FormattableVariation
         $result .= '<th>title</th>';
         $result .= '<th>seller_id</th>';
         $result .= '<th>price</th>';
+        $result .= '<th>rate</th>';
         $result .= '</tr>';
         $result .= '</thead>';
         $result .= '<tbody>';
@@ -26,6 +27,7 @@ class HtmlVariationFormatter implements FormattableVariation
             $result .= '<td>' . $row['title'] . '</td>';
             $result .= '<td>' . $row['seller_id'] . '</td>';
             $result .= '<td>' . $row['price'] . '</td>';
+            $result .= '<td>' . $row['rate'] . '</td>';
             $result .= '</tr>';
         }
         $result .= '</tbody>';

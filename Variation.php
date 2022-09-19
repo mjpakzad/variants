@@ -50,19 +50,49 @@ class Variation
         $rows = [];
         foreach ($data as $datum) {
             if($datum['rate'] == 5) {
-                $rows[] = $datum;
+                $rows[] = [
+                    'title'     => $datum['title'],
+                    'seller_id' => $datum['seller_id'],
+                    'price'     => $datum['price'],
+                    'rate_sum'  => $datum['rate'],
+                    'count'     => 1,
+                ];
                 continue;
             }
             if(!isset($rows[$datum['title']])) {
-                $rows[$datum['title']] = $datum;
+                $rows[$datum['title']] = [
+                    'title'     => $datum['title'],
+                    'seller_id' => $datum['seller_id'],
+                    'price'     => $datum['price'],
+                    'rate_sum'  => $datum['rate'],
+                    'count'     => 1,
+                ];
                 continue;
             }
             $rows[$datum['title']] = [
-                'title' => $datum['title'],
+                'title'     => $datum['title'],
                 'seller_id' => $rows[$datum['title']]['seller_id'] . ',' . $datum['seller_id'],
-                'price' => $rows[$datum['title']]['price'] + $datum['price'],
+                'price'     => $rows[$datum['title']]['price'] + $datum['price'],
+                'rate_sum'  => $rows[$datum['title']]['rate_sum'] + $datum['rate'],
+                'count'     => ++$rows[$datum['title']]['count'],
             ];
         }
-        return $rows;
+        return $this->avg($rows);
     }
+
+    /**
+     * Return average of rate based on rate_sum and count.
+     *
+     * @param array $rows
+     *
+     * @return array
+     */
+    private function avg(array $rows): array
+    {
+        return array_map(function ($row) {
+            $row['rate'] = $row['rate_sum'] / $row['count'];
+            unset($row['rate_sum'], $row['count']);
+            return $row;
+        }, $rows);
+}
 }
