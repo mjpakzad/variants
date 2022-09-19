@@ -1,5 +1,7 @@
 <?php
-namespace App;
+namespace App\Utilities\Formatter;
+
+use App\Variation;
 
 class JsonVariationFormatter implements FormattableVariation
 {
